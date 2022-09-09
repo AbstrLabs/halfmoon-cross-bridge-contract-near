@@ -49,6 +49,7 @@ impl HalfmoonCrossBridge {
         }
     }
 
+    #[payable]
     pub fn add_bridge_request(
         &mut self,
         to_blockchain: String,
@@ -166,7 +167,8 @@ mod tests {
         testing_env!(context.build());
 
         // Set the testing environment for the subsequent calls
-        testing_env!(context.predecessor_account_id(accounts(1)).build());
+        testing_env!(context.predecessor_account_id(accounts(1)).attached_deposit(3 * 10u128.pow(24)).
+        build());
 
         let mut contract = HalfmoonCrossBridge::new(accounts(1));
         contract.add_bridge_request(
@@ -182,7 +184,7 @@ mod tests {
                 to_address: "4IZRTUO72JY5WH4HKLVDQSKIVF2VSRQX7IFVI3KEOQHHNCQUXCMYPZH7J4"
                     .to_string(),
                 from_token_address: None,
-                from_amount_atom: "0".to_string(),
+                from_amount_atom: "3000000000000000000000000".to_string(),
                 status: RequestStatus::Created
             }),
             contract.get_request_status(accounts(1))
